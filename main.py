@@ -40,45 +40,45 @@ HUMAN_MESSAGE_TEMPLATE = (
 # Example documents
 docs = [
     Document(
-        page_content=(
-            "EOD REPORT THURSDAY 14 NOVEMBER\\nARYAA\\n\\n- Tested out lab workflow "
-            "using sample data provided by them and created a small model.\\n\\n- Created "
-            "a small knowledge file using our GOA_GST data and used this to train the "
-            "Granite model to test if it is working as expected -- IT IS -- also resulted "
-            "in a small model fine-tuned on GOA GST data.\\n\\n- Now generating a large "
-            "knowledge file which will contain data from an entire directory of PDFs about "
-            "CA ACTS, which will be used to train our model."
-        ),
+        page_content="EOD REPORT THURSDAY 14 NOVEMBER\\nARYAA\\n\\n"
+                     "- Tested out lab workflow using sample data provided by them "
+                     "and created a small model.\\n\\n"
+                     "- Created a small knowledge file using our GOA_GST data and used "
+                     "this to train the Granite model to test if it is working as expected "
+                     "-- IT IS -- also resulted in a small model fine-tuned on GOA GST "
+                     "data.\\n\\n"
+                     "- Now generating a large knowledge file which will contain data from "
+                     "an entire directory of PDFs about CA ACTS, which will be used to train "
+                     "our model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-14"},
     ),
     Document(
-        page_content=(
-            "Shilpa\\n- Moved workflow to PEFT-oriented strategies\\n- Post InstructLab "
-            "pipeline is in place. Aryaa will cover other workflows within the NeMo framework "
-            "as her pipeline on InstructLab runs.\\n\\nSush\\n- Produced code analysis report for "
-            "CSC on their code base\\n- Explored Meta Self-evaluator to evaluate AMD 1B" 
-            "language model."
-        ),
+        page_content="Shilpa\\n"
+                     "- Moved workflow to PEFT-oriented strategies\\n"
+                     "- Post InstructLab pipeline is in place. Aryaa will cover other "
+                     "workflows within the NeMo framework as her pipeline on InstructLab "
+                     "runs.\\n\\nSush\\n"
+                     "- Produced code analysis report for CSC on their code base\\n"
+                     "- Explored Meta Self-evaluator to evaluate AMD 1B language model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-15"},
     ),
     Document(
-        page_content=(
-            "EOD Report Friday 15 November\\nShilpa\\nI have been doing model downloading "
-            "and model conversion in .nemo format but it is still having an error while "
-            "conversion..So, I will be solving that error.\\n\\nSushmender\\nI am exploring "
-            "Meta's Self-taught-evaluator (Llama-70B) model and requested Nvidia GPU "
-            "for deploying the model."
-        ),
+        page_content="EOD Report Friday 15 November\\nShilpa\\n"
+                     "I have been doing model downloading and model conversion in .nemo "
+                     "format but it is still having an error while conversion. So, I will "
+                     "be solving that error.\\n\\nSushmender\\n"
+                     "I am exploring Meta's Self-taught-evaluator (Llama-70B) model and "
+                     "requested Nvidia GPU for deploying the model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-18"},
     ),
     Document(
-        page_content=(
-            "Report 27th Nov\\nAryaa\\nThe model trained on section 1 is ready.\\n\\nShilpa\\n"
-            "I completed my pipeline for making the dataset. Now I will move to split my "
-            "dataset into train, test, and valid to train my model.\\n\\nSushmender\\nI pulled "
-            "the 'AI-Engineering' channel posts using a GET request, converted them into JSON "
-            "format, and am using it as a knowledge base for my RAG setup."
-        ),
+        page_content="Report 27th Nov\\nAryaa\\n"
+                     "The model trained on section 1 is ready.\\n\\nShilpa\\n"
+                     "I completed my pipeline for making the dataset. Now I will move to "
+                     "split my dataset into train, test, and valid to train my model.\\n\\n"
+                     "Sushmender\\nI pulled the 'AI-Engineering' channel posts using a GET "
+                     "request, converted them into JSON format, and am using it as a "
+                     "knowledge base for my RAG setup.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-28"},
     ),
 ]
