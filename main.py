@@ -81,6 +81,21 @@ docs = [
     ),
 ]
 
+def log_with_horizontal_line(message):
+    """Function to print logs in a structured and readable format"""
+    # Get the terminal width
+    terminal_width = os.get_terminal_size().columns
+
+    # Create the horizontal line
+    horizontal_line = '-' * terminal_width
+
+    # Print the formatted message
+    print(horizontal_line)
+    print()
+    print(message)
+    print()
+    print(horizontal_line)
+
 def get_llm():
     """
     Retrieves an instance of a Large Language Model (LLM) based on the environment 
@@ -177,7 +192,7 @@ def rewriter(agent_state: AgentState) -> AgentState:
     Returns:
         AgentState: The updated agent state with the rewritten question.
     """
-    print("Starting query rewriting...")
+    log_with_horizontal_line("Starting query rewriting...")
     question = agent_state["question"]
 
     prompt = create_prompt(question)
@@ -185,21 +200,21 @@ def rewriter(agent_state: AgentState) -> AgentState:
 
     agent_state["question"] = rewritten_question
 
-    print(f"Rewritten question: {rewritten_question}")
+    log_with_horizontal_line(f"Rewritten question:\\n{rewritten_question}")
     return agent_state
 
 # Function to retrieve documents
 def retrieve_documents(state: AgentState):
-    print("Starting document retrieval...")
+    log_with_horizontal_line("Starting document retrieval...")
     question = state["question"]
     documents = retriever.get_relevant_documents(query=question)
     state["top_documents"] = [doc.page_content for doc in documents[:3]]  # Retrieve top 3 docs
-    print(f"Retrieved documents: {state['top_documents']}")
+    log_with_horizontal_line(f"Retrieved documents: {state['top_documents']}")
     return state
 
 # Define the classifier function
 def question_classifier(state: AgentState):
-    print("Starting topic classification...")
+    log_with_horizontal_line("Starting topic classification...")
     question = state["question"]
     documents = state["top_documents"]
     
@@ -223,18 +238,18 @@ def question_classifier(state: AgentState):
     else:
         state["classification_result"] = "off-topic"
     
-    print(f"Classification result: {state['classification_result']}")
+    log_with_horizontal_line(f"Classification result: {state['classification_result']}")
     return state
 
 # Define the off-topic response function
 def off_topic_response(state: AgentState):
-    print("Question is off-topic. Ending process.")
+    log_with_horizontal_line("Question is off-topic. Ending process.")
     state["llm_output"] = "The question is off-topic, ending the process."
     return state
 
 # Function to rerank documents based on preference order
 def rerank_documents(state: AgentState):
-    print("Starting document reranking with preferences...")
+    log_with_horizontal_line("Starting document reranking with preferences...")
     question = state["question"]
     top_documents = state["top_documents"]
 
@@ -258,7 +273,7 @@ def rerank_documents(state: AgentState):
         "documents": top_documents
     })
     
-    print(f"Ranking result: {ranking_result}")
+    log_with_horizontal_line(f"Ranking result: {ranking_result}")
     
     # Pass the raw ranking result directly to the next stage (answer generation)
     state["top_documents"] = [ranking_result.strip()]  # Pass raw result directly to next node
@@ -268,7 +283,7 @@ def rerank_documents(state: AgentState):
 
 # Function to generate answers
 def generate_answer(state: AgentState):
-    print("Generating answer...")
+    log_with_horizontal_line("Generating answer...")
     llm = get_llm()
     question = state["question"]
     context = "\n".join(state["top_documents"])  # This includes the raw ranking result
@@ -279,7 +294,7 @@ def generate_answer(state: AgentState):
     chain = prompt | llm | StrOutputParser()
     result = chain.invoke({"question": question, "context": context})
     state["llm_output"] = result
-    print(f"Generated answer: {result}")
+    log_with_horizontal_line(f"Generated answer: {result}")
     return state
 
 # Updated workflow
@@ -320,4 +335,4 @@ app = workflow.compile()
 if __name__ == "__main__":
     state = {"question": "What sushmender is working on?"}
     result = app.invoke(state)
-    print(f"Final answer: {result.get('llm_output', 'Process ended.')}")
+    log_with_horizontal_line(f"Final answer: {result.get('llm_output', 'Process ended.')}")
