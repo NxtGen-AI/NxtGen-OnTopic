@@ -1,5 +1,8 @@
 import os
+
 from enum import Enum
+from typing import List
+from typing_extensions import TypedDict
 
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -8,9 +11,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import Document
 from langchain_community.vectorstores import Chroma
 from langgraph.graph import StateGraph, END
-from typing_extensions import TypedDict
 from langchain.prompts import PromptTemplate
-from typing import List
 
 class LLMType(str, Enum):
     """
