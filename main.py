@@ -206,13 +206,23 @@ def rewriter(agent_state: AgentState) -> AgentState:
     return agent_state
 
 # Function to retrieve documents
-def retrieve_documents(state: AgentState):
+def retrieve_documents(agent_state: AgentState):
+    """
+    Retrieves relevant documents based on the question in the agent's state.
+
+    :param agent_state: A dictionary containing the current state of the agent, 
+    including the question.
+    :return: The updated agent state with the top 3 retrieved documents.
+    """
     log_with_horizontal_line("Starting document retrieval...")
-    question = state["question"]
-    documents = retriever.get_relevant_documents(query=question)
-    state["top_documents"] = [doc.page_content for doc in documents[:3]]  # Retrieve top 3 docs
-    log_with_horizontal_line(f"Retrieved documents: {state['top_documents']}")
-    return state
+    question = agent_state["question"]
+    documents = retriever.get_relevant_documents(query = question)
+
+    # Retrieve top 3 docs
+    agent_state["top_documents"] = [doc.page_content for doc in documents[:3]]
+
+    log_with_horizontal_line(f"Retrieved documents: {agent_state['top_documents']}")
+    return agent_state
 
 # Define the classifier function
 def question_classifier(state: AgentState):
