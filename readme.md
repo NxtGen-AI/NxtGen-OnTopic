@@ -8,4 +8,8 @@ pip install langchain_openai
 
 pip install langgraph
 
-pip install chromadb# NxtGen-OnTopic
+pip install chromadb
+
+install  ollama
+
+run ollama pull llama3.1:8b
