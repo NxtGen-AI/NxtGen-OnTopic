@@ -27,6 +27,16 @@ MODEL_OLLAMA = "llama3.1:8b"
 MODEL_OPENAI = "gpt-4o-mini"
 TEMPERATURE_DEFAULT = 0
 
+SYSTEM_MESSAGE = (
+    "You are a question re-writer that converts an input question to a better version "
+    "that is optimized for retrieval. Look at the input and try to reason about the "
+    "underlying semantic intent / meaning."
+)
+
+HUMAN_MESSAGE_TEMPLATE = (
+    "Here is the initial question:\\n\\n{question}\\nFormulate an improved question."
+)
+
 # Example documents
 docs = [
     Document(
@@ -123,27 +133,60 @@ class AgentState(TypedDict):
     llm_output: str
     classification_result: str
 
-# Function for query rewriting
-def rewriter(state: AgentState):
-    print("Starting query rewriting...")
-    question = state["question"]
-    system = """You are a question re-writer that converts an input question to a better version that is optimized 
-    for retrieval. Look at the input and try to reason about the underlying semantic intent / meaning."""
-    re_write_prompt = ChatPromptTemplate.from_messages(
+def create_prompt(question: str) -> ChatPromptTemplate:
+    """
+    Create a chat prompt template for the LLM.
+
+    Args:
+        question (str): The initial question to be rewritten.
+
+    Returns:
+        ChatPromptTemplate: The chat prompt template.
+    """
+    human_message = HUMAN_MESSAGE_TEMPLATE.format(question=question)
+    return ChatPromptTemplate.from_messages(
         [
-            ("system", system),
-            (
-                "human",
-                "Here is the initial question: \n\n {question} \n Formulate an improved question.",
-            ),
+            ("system", SYSTEM_MESSAGE),
+            ("human", human_message),
         ]
     )
+
+def rewrite_question(prompt: ChatPromptTemplate, question: str) -> str:
+    """
+    Use the LLM to rewrite the question.
+
+    Args:
+        prompt (ChatPromptTemplate): The chat prompt template.
+        question (str): The initial question to be rewritten.
+
+    Returns:
+        str: The rewritten question.
+    """
     llm = get_llm()
-    question_rewriter = re_write_prompt | llm | StrOutputParser()
+    question_rewriter = prompt | llm | StrOutputParser()
     output = question_rewriter.invoke({"question": question})
-    state["question"] = output
-    print(f"Rewritten question: {output}")
-    return state
+    return output
+
+def rewriter(agent_state: AgentState) -> AgentState:
+    """
+    Rewrites a given question to an optimized version for retrieval.
+
+    Args:
+        agent_state (AgentState): The current state of the agent, including the initial question.
+
+    Returns:
+        AgentState: The updated agent state with the rewritten question.
+    """
+    print("Starting query rewriting...")
+    question = agent_state["question"]
+
+    prompt = create_prompt(question)
+    rewritten_question = rewrite_question(prompt, question)
+
+    agent_state["question"] = rewritten_question
+
+    print(f"Rewritten question: {rewritten_question}")
+    return agent_state
 
 # Function to retrieve documents
 def retrieve_documents(state: AgentState):
