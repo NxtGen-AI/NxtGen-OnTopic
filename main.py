@@ -108,8 +108,16 @@ embedding_function = get_embeddings()
 db = Chroma.from_documents(docs, embedding_function)
 retriever = db.as_retriever()
 
-# TypedDict for AgentState
 class AgentState(TypedDict):
+    """
+    Represents the state of an agent.
+
+    Attributes:
+        question (str): The question posed to the agent.
+        top_documents (List[str]): A list of top relevant documents.
+        llm_output (str): The output from the language model.
+        classification_result (str): The result of the classification.
+    """
     question: str
     top_documents: List[str]
     llm_output: str
