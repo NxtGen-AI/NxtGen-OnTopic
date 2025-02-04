@@ -181,8 +181,8 @@ def rewrite_question(prompt: ChatPromptTemplate, question: str) -> str:
     """
     llm = get_llm()
     question_rewriter = prompt | llm | StrOutputParser()
-    output = question_rewriter.invoke({"question": question})
-    return output
+    rewritten_question = question_rewriter.invoke({"question": question})
+    return rewritten_question
 
 def rewriter(agent_state: AgentState) -> AgentState:
     """
