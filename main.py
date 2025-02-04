@@ -1,15 +1,12 @@
 import os
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import Document
 from langchain_community.vectorstores import Chroma
 from langgraph.graph import StateGraph, END
 from typing_extensions import TypedDict
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.llms import HuggingFaceHub
 from langchain.prompts import PromptTemplate
 from typing import List
 
