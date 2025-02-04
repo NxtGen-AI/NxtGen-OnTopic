@@ -1,0 +1,220 @@
+import os
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain.schema import Document
+from langchain_community.vectorstores import Chroma
+from langgraph.graph import StateGraph, END
+from typing_extensions import TypedDict
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.llms import HuggingFaceHub
+from langchain.prompts import PromptTemplate
+from typing import List
+
+# Function to get LLM instance
+def get_llm():
+    llm_type = os.getenv("LLM_TYPE", "ollama")
+    if llm_type == "ollama":
+        return ChatOllama(model="llama3.1:8b", temperature=0)
+    else:
+        return ChatOpenAI(temperature=0, model="gpt-4o-mini")
+
+# Function to get embedding instance
+def get_embeddings():
+    embedding_type = os.getenv("LLM_TYPE", "ollama")
+    if embedding_type == "ollama":
+        return OllamaEmbeddings(model="llama3.1:8b")
+    else:
+        return OpenAIEmbeddings()
+
+# Embedding function and documents
+embedding_function = get_embeddings()
+
+# Example documents
+docs = [
+    Document(
+        page_content="EOD REPORT THURSDAY 14 NOVEMBER\nARYAA\n\n- Tested out lab workflow using sample data provided by them and created a small model.\n\n- Created a small knowledge file using our GOA_GST data and used this to train the Granite model to test if it is working as expected -- IT IS -- also resulted in a small model fine-tuned on GOA GST data.\n\n- Now generating a large knowledge file which will contain data from an entire directory of PDFs about CA ACTS, which will be used to train our model.",
+        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-14"},
+    ),
+    Document(
+        page_content="Shilpa\n- Moved workflow to PEFT-oriented strategies\n- Post InstructLab pipeline is in place. Aryaa will cover other workflows within the NeMo framework as her pipeline on InstructLab runs.\n\nSush\n- Produced code analysis report for CSC on their code base\n- Explored Meta Self-evaluator to evaluate AMD 1B language model.",
+        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-15"},
+    ),
+    Document(
+        page_content="EOD Report Friday 15 November\nShilpa\nI have been doing model downloading and model conversion in .nemo format but it is still having an error while conversion. So, I will be solving that error.\n\nSushmender\nI am exploring Meta's Self-taught-evaluator (Llama-70B) model and requested Nvidia GPU for deploying the model.",
+        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-18"},
+    ),
+    Document(
+        page_content="Report 27th Nov\nAryaa\nThe model trained on section 1 is ready.\n\nShilpa\nI completed my pipeline for making the dataset. Now I will move to split my dataset into train, test, and valid to train my model.\n\nSushmender\nI pulled the 'AI-Engineering' channel posts using a GET request, converted them into JSON format, and am using it as a knowledge base for my RAG setup.",
+        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-28"},
+    ),
+]
+
+# Initialize Chroma vector store
+db = Chroma.from_documents(docs, embedding_function)
+retriever = db.as_retriever()
+
+# TypedDict for AgentState
+class AgentState(TypedDict):
+    question: str
+    top_documents: List[str]
+    llm_output: str
+    classification_result: str
+
+# Function for query rewriting
+def rewriter(state: AgentState):
+    print("Starting query rewriting...")
+    question = state["question"]
+    system = """You are a question re-writer that converts an input question to a better version that is optimized 
+    for retrieval. Look at the input and try to reason about the underlying semantic intent / meaning."""
+    re_write_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system),
+            (
+                "human",
+                "Here is the initial question: \n\n {question} \n Formulate an improved question.",
+            ),
+        ]
+    )
+    llm = get_llm()
+    question_rewriter = re_write_prompt | llm | StrOutputParser()
+    output = question_rewriter.invoke({"question": question})
+    state["question"] = output
+    print(f"Rewritten question: {output}")
+    return state
+
+# Function to retrieve documents
+def retrieve_documents(state: AgentState):
+    print("Starting document retrieval...")
+    question = state["question"]
+    documents = retriever.get_relevant_documents(query=question)
+    state["top_documents"] = [doc.page_content for doc in documents[:3]]  # Retrieve top 3 docs
+    print(f"Retrieved documents: {state['top_documents']}")
+    return state
+
+# Define the classifier function
+def question_classifier(state: AgentState):
+    print("Starting topic classification...")
+    question = state["question"]
+    documents = state["top_documents"]
+    
+    # LLM-based classification
+    classifier_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "You are a classifier that determines if a question and retrieved documents are on-topic."),
+            (
+                "human",
+                "Question: {question}\n\nDocuments: {documents}\n\nIs this on-topic? Respond with 'on-topic' or 'off-topic'.",
+            ),
+        ]
+    )
+    
+    llm = get_llm()
+    classifier_chain = classifier_prompt | llm | StrOutputParser()
+    result = classifier_chain.invoke({"question": question, "documents": "\n".join(documents)})
+    
+    if "on-topic" in result.lower():
+        state["classification_result"] = "on-topic"
+    else:
+        state["classification_result"] = "off-topic"
+    
+    print(f"Classification result: {state['classification_result']}")
+    return state
+
+# Define the off-topic response function
+def off_topic_response(state: AgentState):
+    print("Question is off-topic. Ending process.")
+    state["llm_output"] = "The question is off-topic, ending the process."
+    return state
+
+# Function to rerank documents based on preference order
+def rerank_documents(state: AgentState):
+    print("Starting document reranking with preferences...")
+    question = state["question"]
+    top_documents = state["top_documents"]
+
+    reranker_prompt = PromptTemplate(
+        input_variables=["question", "documents"],
+        template="""Given the question and doccuments , rank the following documents in order of preference (1st, 2nd, 3rd) based on the relevence to the question. 
+        Provide your ranking as "1st preference: <complete chunk>", "2nd preference: <complete chunk>", and "3rd preference: <complete chunk>".
+        If there are fewer than 3 relevant documents, skip ranking those that are not useful.
+        please give the complete chunks .
+        
+        Question: {question}
+        Documents:{documents}"""
+    )
+
+    llm = get_llm()
+    chain = reranker_prompt | llm | StrOutputParser()
+    
+    # Generate rankings
+    ranking_result = chain.invoke({
+        "question": question,
+        "documents": top_documents
+    })
+    
+    print(f"Ranking result: {ranking_result}")
+    
+    # Pass the raw ranking result directly to the next stage (answer generation)
+    state["top_documents"] = [ranking_result.strip()]  # Pass raw result directly to next node
+    
+    return state
+
+
+# Function to generate answers
+def generate_answer(state: AgentState):
+    print("Generating answer...")
+    llm = get_llm()
+    question = state["question"]
+    context = "\n".join(state["top_documents"])  # This includes the raw ranking result
+
+    template = """Answer the question based only on the following context:\n{context}\n\nQuestion: {question}. Dont mention like prefernce and context while generating the answer"""
+
+    prompt = ChatPromptTemplate.from_template(template=template)
+    chain = prompt | llm | StrOutputParser()
+    result = chain.invoke({"question": question, "context": context})
+    state["llm_output"] = result
+    print(f"Generated answer: {result}")
+    return state
+
+# Updated workflow
+workflow = StateGraph(AgentState)
+
+# Add nodes for query rewriting, classification, off-topic response, and document retrieval
+workflow.add_node("rewriter", rewriter)
+workflow.add_node("retrieve_documents", retrieve_documents)
+workflow.add_node("topic_decision", question_classifier)
+workflow.add_node("off_topic_response", off_topic_response)
+workflow.add_node("rerank_documents", rerank_documents)
+workflow.add_node("generate_answer", generate_answer)
+
+# Add conditional edges for topic decision after retrieval
+workflow.add_conditional_edges(
+    "topic_decision",
+    lambda state: "on-topic" if state["classification_result"] == "on-topic" else "off-topic",
+    {
+        "on-topic": "rerank_documents",
+        "off-topic": "off_topic_response",
+    },
+)
+
+# Add edges for reranking and answer generation
+workflow.add_edge("rewriter", "retrieve_documents")
+workflow.add_edge("retrieve_documents", "topic_decision")
+workflow.add_edge("rerank_documents", "generate_answer")
+workflow.add_edge("generate_answer", END)
+
+# Set entry point to query rewriting
+workflow.set_entry_point("rewriter")
+
+# Compile app
+app = workflow.compile()
+
+
+# Example invocation
+if __name__ == "__main__":
+    state = {"question": "What sushmender is working on?"}
+    result = app.invoke(state)
+    print(f"Final answer: {result.get('llm_output', 'Process ended.')}")
