@@ -27,13 +27,13 @@ MODEL_OLLAMA = "llama3.1:8b"
 MODEL_OPENAI = "gpt-4o-mini"
 TEMPERATURE_DEFAULT = 0
 
-SYSTEM_MESSAGE = (
+SYSTEM_MESSAGE_REWRITER = (
     "You are a question re-writer that converts an input question to a better version "
     "that is optimized for retrieval. Look at the input and try to reason about the "
     "underlying semantic intent / meaning."
 )
 
-HUMAN_MESSAGE_TEMPLATE = (
+HUMAN_MESSAGE_TEMPLATE_REWRITER = (
     "Here is the initial question:\\n\\n{question}\\nFormulate an improved question."
 )
 
@@ -160,10 +160,10 @@ def create_prompt(question: str) -> ChatPromptTemplate:
     Returns:
         ChatPromptTemplate: The chat prompt template.
     """
-    human_message = HUMAN_MESSAGE_TEMPLATE.format(question=question)
+    human_message = HUMAN_MESSAGE_TEMPLATE_REWRITER.format(question=question)
     return ChatPromptTemplate.from_messages(
         [
-            ("system", SYSTEM_MESSAGE),
+            ("system", SYSTEM_MESSAGE_REWRITER),
             ("human", human_message),
         ]
     )
@@ -225,33 +225,54 @@ def retrieve_documents(agent_state: AgentState):
     return agent_state
 
 # Define the classifier function
-def question_classifier(state: AgentState):
+def question_classifier(agent_state: AgentState) -> AgentState:
+    """
+    Classifies a question and its retrieved documents as on-topic or off-topic using 
+    an LLM-based approach.
+
+    Args:
+        agent_state (AgentState): The current agent state containing the question and 
+        top documents.
+
+    Returns:
+        AgentState: The updated agent state with the classification result.
+    """
+
     log_with_horizontal_line("Starting topic classification...")
-    question = state["question"]
-    documents = state["top_documents"]
-    
-    # LLM-based classification
+
+    # Extract relevant information from the agent state
+    question = agent_state["question"]
+    documents = agent_state["top_documents"]
+
+    # Define the LLM-based classifier prompt
     classifier_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", "You are a classifier that determines if a question and retrieved documents are on-topic."),
             (
                 "human",
-                "Question: {question}\n\nDocuments: {documents}\n\nIs this on-topic? Respond with 'on-topic' or 'off-topic'.",
+                "Question: {question}\\n\\nDocuments: {documents}\\n\\nIs this on-topic? Respond with 'on-topic' or 'off-topic'.",
             ),
         ]
     )
-    
+
+    # Initialize the LLM instance
     llm = get_llm()
+
+    # Create a pipeline for classification
     classifier_chain = classifier_prompt | llm | StrOutputParser()
-    result = classifier_chain.invoke({"question": question, "documents": "\n".join(documents)})
-    
-    if "on-topic" in result.lower():
-        state["classification_result"] = "on-topic"
-    else:
-        state["classification_result"] = "off-topic"
-    
-    log_with_horizontal_line(f"Classification result: {state['classification_result']}")
-    return state
+
+    # Invoke the classification pipeline
+    input_data = {"question": question, "documents": "\\n".join(documents)}
+    raw_classification_result = classifier_chain.invoke(input_data)
+
+    # Determine the classification result based on the LLM's response
+    classification_result = "on-topic" if "on-topic" in raw_classification_result.lower() else "off-topic"
+
+    # Update the agent state with the classification result
+    agent_state["classification_result"] = classification_result
+
+    log_with_horizontal_line(f"Classification result: {agent_state['classification_result']}")
+    return agent_state
 
 # Define the off-topic response function
 def off_topic_response(state: AgentState):
