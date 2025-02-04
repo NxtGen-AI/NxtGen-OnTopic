@@ -56,16 +56,18 @@ docs = [
             "Shilpa\\n- Moved workflow to PEFT-oriented strategies\\n- Post InstructLab "
             "pipeline is in place. Aryaa will cover other workflows within the NeMo framework "
             "as her pipeline on InstructLab runs.\\n\\nSush\\n- Produced code analysis report for "
-            "CSC on their code base\\n- Explored Meta Self-evaluator to evaluate AMD 1B language model."
+            "CSC on their code base\\n- Explored Meta Self-evaluator to evaluate AMD 1B" 
+            "language model."
         ),
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-15"},
     ),
     Document(
         page_content=(
             "EOD Report Friday 15 November\\nShilpa\\nI have been doing model downloading "
-            "and model conversion in .nemo format but it is still having an error while conversion. "
-            "So, I will be solving that error.\\n\\nSushmender\\nI am exploring Meta's Self-taught-"
-            "evaluator (Llama-70B) model and requested Nvidia GPU for deploying the model."
+            "and model conversion in .nemo format but it is still having an error while "
+            "conversion..So, I will be solving that error.\\n\\nSushmender\\nI am exploring "
+            "Meta's Self-taught-evaluator (Llama-70B) model and requested Nvidia GPU "
+            "for deploying the model."
         ),
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-18"},
     ),
