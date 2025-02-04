@@ -41,18 +41,21 @@ def get_llm():
     """
 
     llm_type = os.getenv("LLM_TYPE", LLMType.OLLAMA.value)
+
     if llm_type == LLMType.OLLAMA.value:
         return ChatOllama(model = MODEL_OLLAMA, temperature = TEMPERATURE_DEFAULT)
 
     return ChatOpenAI(model = MODEL_OPENAI, temperature = TEMPERATURE_DEFAULT)
 
-# Function to get embedding instance
 def get_embeddings():
-    embedding_type = os.getenv("LLM_TYPE", "ollama")
-    if embedding_type == "ollama":
-        return OllamaEmbeddings(model="llama3.1:8b")
-    else:
-        return OpenAIEmbeddings()
+    """Function to get embedding instance based on environment variable."""
+
+    embedding_type = os.getenv("LLM_TYPE", LLMType.OLLAMA.value)
+
+    if embedding_type == LLMType.OLLAMA.value:
+        return OllamaEmbeddings(model = MODEL_OLLAMA)
+
+    return OpenAIEmbeddings()
 
 # Embedding function and documents
 embedding_function = get_embeddings()
