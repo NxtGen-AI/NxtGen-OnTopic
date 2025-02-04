@@ -1,4 +1,6 @@
 import os
+from enum import Enum
+
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
@@ -10,13 +12,35 @@ from typing_extensions import TypedDict
 from langchain.prompts import PromptTemplate
 from typing import List
 
-# Function to get LLM instance
+class LLMType(str, Enum):
+    """
+    Defines an enumeration for LLM types
+    """
+    OLLAMA = "ollama"
+
+# Define constants for model parameters
+MODEL_OLLAMA = "llama3.1:8b"
+MODEL_OPENAI = "gpt-4o-mini"
+TEMPERATURE_DEFAULT = 0
+
 def get_llm():
-    llm_type = os.getenv("LLM_TYPE", "ollama")
-    if llm_type == "ollama":
-        return ChatOllama(model="llama3.1:8b", temperature=0)
-    else:
-        return ChatOpenAI(temperature=0, model="gpt-4o-mini")
+    """
+    Retrieves an instance of a Large Language Model (LLM) based on the environment 
+    variable 'LLM_TYPE'.
+
+    The function checks the value of the 'LLM_TYPE' environment variable and returns 
+    an instance of the corresponding LLM. If the environment variable is not set or 
+    has an unexpected value, it defaults to Ollama.
+
+    Returns:
+        An instance of either ChatOllama or ChatOpenAI.
+    """
+
+    llm_type = os.getenv("LLM_TYPE", LLMType.OLLAMA.value)
+    if llm_type == LLMType.OLLAMA.value:
+        return ChatOllama(model = MODEL_OLLAMA, temperature = TEMPERATURE_DEFAULT)
+
+    return ChatOpenAI(model = MODEL_OPENAI, temperature = TEMPERATURE_DEFAULT)
 
 # Function to get embedding instance
 def get_embeddings():
