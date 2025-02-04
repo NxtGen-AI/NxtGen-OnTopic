@@ -1,4 +1,4 @@
-# Question Answering System
+# Query Answering System
 A conversational AI system that takes user queries, refines them, retrieves relevant documents, and generates answers using NLP techniques and LangChain framework.
 
 ## Table of Contents
