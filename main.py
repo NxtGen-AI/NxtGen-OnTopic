@@ -216,7 +216,7 @@ def retrieve_documents(agent_state: AgentState):
     """
     log_with_horizontal_line("Starting document retrieval...")
     question = agent_state["question"]
-    documents = retriever.get_relevant_documents(query = question)
+    documents = retriever.invoke(question)
 
     # Retrieve top 3 docs
     agent_state["top_documents"] = [doc.page_content for doc in documents[:3]]
