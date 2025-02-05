@@ -27,61 +27,45 @@ MODEL_OLLAMA = "llama3.1:8b"
 MODEL_OPENAI = "gpt-4o-mini"
 TEMPERATURE_DEFAULT = 0
 
-SYSTEM_MESSAGE_REWRITER = (
-    "You are a question re-writer that converts an input question to a better version "
-    "that is optimized for retrieval. Look at the input and try to reason about the "
-    "underlying semantic intent / meaning."
-)
+SYSTEM_MESSAGE_REWRITER = """You are a question re-writer that converts an input question to a better version that is optimized 
+    for retrieval. Look at the input and try to reason about the underlying semantic intent / meaning."""
 
-HUMAN_MESSAGE_TEMPLATE_REWRITER = (
-    "Here is the initial question:\\n\\n{question}\\nFormulate an improved question."
-)
+
+HUMAN_MESSAGE_TEMPLATE_REWRITER = "Here is the initial question: \n\n {question} \n Formulate an improved question."
 
 # Example documents
 docs = [
     Document(
-        page_content="EOD REPORT THURSDAY 14 NOVEMBER\\nARYAA\\n\\n"
-                     "- Tested out lab workflow using sample data provided by them "
-                     "and created a small model.\\n\\n"
-                     "- Created a small knowledge file using our GOA_GST data and used "
-                     "this to train the Granite model to test if it is working as expected "
-                     "-- IT IS -- also resulted in a small model fine-tuned on GOA GST "
-                     "data.\\n\\n"
-                     "- Now generating a large knowledge file which will contain data from "
-                     "an entire directory of PDFs about CA ACTS, which will be used to train "
-                     "our model.",
+        page_content="EOD REPORT THURSDAY 14 NOVEMBER\nARYAA\n\n- Tested out lab workflow using sample data provided by them and created a small model.\n\n- Created a small knowledge file using our GOA_GST data and used this to train the Granite model to test if it is working as expected -- IT IS -- also resulted in a small model fine-tuned on GOA GST data.\n\n- Now generating a large knowledge file which will contain data from an entire directory of PDFs about CA ACTS, which will be used to train our model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-14"},
     ),
     Document(
-        page_content="Shilpa\\n"
-                     "- Moved workflow to PEFT-oriented strategies\\n"
-                     "- Post InstructLab pipeline is in place. Aryaa will cover other "
-                     "workflows within the NeMo framework as her pipeline on InstructLab "
-                     "runs.\\n\\nSush\\n"
-                     "- Produced code analysis report for CSC on their code base\\n"
-                     "- Explored Meta Self-evaluator to evaluate AMD 1B language model.",
+        page_content="Shilpa\n- Moved workflow to PEFT-oriented strategies\n- Post InstructLab pipeline is in place. Aryaa will cover other workflows within the NeMo framework as her pipeline on InstructLab runs.\n\nSush\n- Produced code analysis report for CSC on their code base\n- Explored Meta Self-evaluator to evaluate AMD 1B language model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-15"},
     ),
     Document(
-        page_content="EOD Report Friday 15 November\\nShilpa\\n"
-                     "I have been doing model downloading and model conversion in .nemo "
-                     "format but it is still having an error while conversion. So, I will "
-                     "be solving that error.\\n\\nSushmender\\n"
-                     "I am exploring Meta's Self-taught-evaluator (Llama-70B) model and "
-                     "requested Nvidia GPU for deploying the model.",
+        page_content="EOD Report Friday 15 November\nShilpa\nI have been doing model downloading and model conversion in .nemo format but it is still having an error while conversion. So, I will be solving that error.\n\nSushmender\nI am exploring Meta's Self-taught-evaluator (Llama-70B) model and requested Nvidia GPU for deploying the model.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-18"},
     ),
     Document(
-        page_content="Report 27th Nov\\nAryaa\\n"
-                     "The model trained on section 1 is ready.\\n\\nShilpa\\n"
-                     "I completed my pipeline for making the dataset. Now I will move to "
-                     "split my dataset into train, test, and valid to train my model.\\n\\n"
-                     "Sushmender\\nI pulled the 'AI-Engineering' channel posts using a GET "
-                     "request, converted them into JSON format, and am using it as a "
-                     "knowledge base for my RAG setup.",
+        page_content="Report 27th Nov\nAryaa\nThe model trained on section 1 is ready.\n\nShilpa\nI completed my pipeline for making the dataset. Now I will move to split my dataset into train, test, and valid to train my model.\n\nSushmender\nI pulled the 'AI-Engineering' channel posts using a GET request, converted them into JSON format, and am using it as a knowledge base for my RAG setup.",
         metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-28"},
     ),
 ]
+
+# Define constants for the classifier prompt
+CLASSIFIER_INTRODUCTION = "You are a classifier that determines if a question and retrieved documents are on-topic."
+CLASSIFIER_PROMPT_TEMPLATE = "Question: {question}\n\nDocuments: {documents}\n\nIs this on-topic? Respond with 'on-topic' or 'off-topic'."
+
+RERANKING_PROMPT_TEMPLATE = """Given the question and doccuments , rank the following documents in order of preference (1st, 2nd, 3rd) based on the relevence to the question. 
+        Provide your ranking as "1st preference: <complete chunk>", "2nd preference: <complete chunk>", and "3rd preference: <complete chunk>".
+        If there are fewer than 3 relevant documents, skip ranking those that are not useful.
+        please give the complete chunks .
+        
+        Question: {question}
+        Documents:{documents}"""
+        
+ANSWER_TEMPLATE = """Answer the question based only on the following context:\n{context}\n\nQuestion: {question}. Dont mention like prefernce and context while generating the answer"""
 
 def log_with_horizontal_line(message):
     """Function to print logs in a structured and readable format"""
@@ -95,6 +79,27 @@ def log_with_horizontal_line(message):
     print(horizontal_line)
     print()
     print(message)
+    print()
+    print(horizontal_line)
+
+def log_ordered_list_with_horizontal_break(message: str, collection: list):
+    """Function to print ordered lists in a structured and readable format"""
+    # Get the terminal width
+    terminal_width = os.get_terminal_size().columns
+
+    # Create the horizontal line and indent
+    horizontal_line = '-' * terminal_width
+
+    # Print the formatted message
+    print(horizontal_line)
+    print()
+    print(message)
+    for i, item in enumerate(collection, 1):
+        lines = item.split("\\n")
+        print(f"{i}. {lines[0]}")  # Print the number and first line together
+        for line in lines[1:]:       # Indent subsequent lines
+            print(f"    {line}")
+        print()
     print()
     print(horizontal_line)
 
@@ -168,6 +173,35 @@ def create_prompt(question: str) -> ChatPromptTemplate:
         ]
     )
 
+def get_pipeline(prompt):
+    """
+    Creates a pipeline consisting of the given prompt, a large language model (LLM), 
+    and a string output parser.
+
+    Args:
+        prompt: The input prompt to be used in the pipeline.
+
+    Returns:
+        A pipeline object that can be used for processing inputs.
+    """
+    llm = get_llm()
+    return prompt | llm | StrOutputParser()
+
+def process_with_pipeline(prompt, inputs):
+    """
+    Get a pipeline based on the given prompt and invoke it with the specified inputs.
+
+    Parameters:
+    - prompt (str): The prompt used to determine which pipeline to get.
+    - inputs (dict): A dictionary containing the input data for the pipeline invocation.
+
+    Returns:
+    - pipeline_result: The outcome of invoking the pipeline with the provided inputs.
+    """
+    chain = get_pipeline(prompt)
+    pipeline_result = chain.invoke(inputs)
+    return pipeline_result
+
 def rewrite_question(prompt: ChatPromptTemplate, question: str) -> str:
     """
     Use the LLM to rewrite the question.
@@ -179,10 +213,7 @@ def rewrite_question(prompt: ChatPromptTemplate, question: str) -> str:
     Returns:
         str: The rewritten question.
     """
-    llm = get_llm()
-    question_rewriter = prompt | llm | StrOutputParser()
-    rewritten_question = question_rewriter.invoke({"question": question})
-    return rewritten_question
+    return process_with_pipeline(prompt, {"question": question})
 
 def rewriter(agent_state: AgentState) -> AgentState:
     """
@@ -221,10 +252,49 @@ def retrieve_documents(agent_state: AgentState):
     # Retrieve top 3 docs
     agent_state["top_documents"] = [doc.page_content for doc in documents[:3]]
 
-    log_with_horizontal_line(f"Retrieved documents: {agent_state['top_documents']}")
+    log_ordered_list_with_horizontal_break("Retrieved documents: ", agent_state['top_documents'])
     return agent_state
 
+def on_topic_classifier(response: str) -> str:
+    """Determines the classification result based on the LLM's response"""
+    return "on-topic" if "on-topic" in response.lower() else "off-topic"
+
 # Define the classifier function
+def format_classifier_prompt(question: str, documents: list) -> str:
+    """
+    Formats the classifier prompt text with the question and documents.
+
+    Args:
+        question (str): The question to classify.
+        documents (list): The retrieved documents.
+
+    Returns:
+        str: The formatted classifier prompt text.
+    """
+    return CLASSIFIER_PROMPT_TEMPLATE.format(question=question, documents='\\n'.join(documents))
+
+def create_classifier_prompt(question: str, documents: list) -> ChatPromptTemplate:
+    """
+    Creates a LLM-based classifier prompt with the given question and documents.
+
+    Args:
+        question (str): The question to classify.
+        documents (list): The retrieved documents.
+
+    Returns:
+        ChatPromptTemplate: A chat prompt template for classification.
+    """
+    classifier_prompt_text = format_classifier_prompt(question, documents)
+    return ChatPromptTemplate.from_messages(
+        [
+            ("system", CLASSIFIER_INTRODUCTION),
+            (
+                "human",
+                classifier_prompt_text,
+            ),
+        ]
+    )
+
 def question_classifier(agent_state: AgentState) -> AgentState:
     """
     Classifies a question and its retrieved documents as on-topic or off-topic using 
@@ -243,30 +313,14 @@ def question_classifier(agent_state: AgentState) -> AgentState:
     # Extract relevant information from the agent state
     question = agent_state["question"]
     documents = agent_state["top_documents"]
+    input_data = {"question": question, "documents": "\\\\n".join(documents)}
 
-    # Define the LLM-based classifier prompt
-    classifier_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", "You are a classifier that determines if a question and retrieved documents are on-topic."),
-            (
-                "human",
-                "Question: {question}\\n\\nDocuments: {documents}\\n\\nIs this on-topic? Respond with 'on-topic' or 'off-topic'.",
-            ),
-        ]
-    )
+    # Create the LLM-based classifier prompt
+    classifier_prompt = create_classifier_prompt(question, documents)
 
-    # Initialize the LLM instance
-    llm = get_llm()
-
-    # Create a pipeline for classification
-    classifier_chain = classifier_prompt | llm | StrOutputParser()
-
-    # Invoke the classification pipeline
-    input_data = {"question": question, "documents": "\\n".join(documents)}
-    raw_classification_result = classifier_chain.invoke(input_data)
-
-    # Determine the classification result based on the LLM's response
-    classification_result = "on-topic" if "on-topic" in raw_classification_result.lower() else "off-topic"
+    # Use a pipeline for classification
+    raw_classification_result = process_with_pipeline(classifier_prompt, input_data)
+    classification_result = on_topic_classifier(raw_classification_result)
 
     # Update the agent state with the classification result
     agent_state["classification_result"] = classification_result
@@ -274,61 +328,67 @@ def question_classifier(agent_state: AgentState) -> AgentState:
     log_with_horizontal_line(f"Classification result: {agent_state['classification_result']}")
     return agent_state
 
-# Define the off-topic response function
-def off_topic_response(state: AgentState):
+def off_topic_response(agent_state: AgentState) -> AgentState:
+    """Handle off-topic questions by logging and updating agent state."""
     log_with_horizontal_line("Question is off-topic. Ending process.")
-    state["llm_output"] = "The question is off-topic, ending the process."
-    return state
+    agent_state["llm_output"] = "The question is off-topic, ending the process."
+    return agent_state
 
-# Function to rerank documents based on preference order
-def rerank_documents(state: AgentState):
+def rerank_documents(agent_state: AgentState) -> AgentState:
+    """Rerank top documents based on preference order using LLM."""
     log_with_horizontal_line("Starting document reranking with preferences...")
-    question = state["question"]
-    top_documents = state["top_documents"]
 
+    # Extract necessary data from agent state
+    question = agent_state["question"]
+    top_documents = agent_state["top_documents"]
+
+    # Define the prompt template for document reranking
     reranker_prompt = PromptTemplate(
-        input_variables=["question", "documents"],
-        template="""Given the question and doccuments , rank the following documents in order of preference (1st, 2nd, 3rd) based on the relevence to the question. 
-        Provide your ranking as "1st preference: <complete chunk>", "2nd preference: <complete chunk>", and "3rd preference: <complete chunk>".
-        If there are fewer than 3 relevant documents, skip ranking those that are not useful.
-        please give the complete chunks .
-        
-        Question: {question}
-        Documents:{documents}"""
+        input_variables=[],
+        template=RERANKING_PROMPT_TEMPLATE.format(question=question, documents=top_documents)
     )
 
-    llm = get_llm()
-    chain = reranker_prompt | llm | StrOutputParser()
-    
-    # Generate rankings
-    ranking_result = chain.invoke({
+    # Process the reranking prompt with the LLM
+    ranking_result = process_with_pipeline(reranker_prompt, {
         "question": question,
         "documents": top_documents
     })
-    
+
     log_with_horizontal_line(f"Ranking result: {ranking_result}")
-    
-    # Pass the raw ranking result directly to the next stage (answer generation)
-    state["top_documents"] = [ranking_result.strip()]  # Pass raw result directly to next node
-    
-    return state
 
+    # Update the agent state with the raw ranking result
+    agent_state["top_documents"] = [ranking_result.strip()]
 
-# Function to generate answers
-def generate_answer(state: AgentState):
+    return agent_state
+
+def generate_answer(agent_state: AgentState) -> AgentState:
+    """Generates an answer to the agent's question based on provided context.
+    
+    Args:
+        agent_state: An instance of AgentState containing the question and relevant documents.
+        
+    Returns:
+        The updated AgentState with the generated answer.
+        
+    Side Effects:
+        Logs the generation process and the resulting answer.
+    """
     log_with_horizontal_line("Generating answer...")
-    llm = get_llm()
-    question = state["question"]
-    context = "\n".join(state["top_documents"])  # This includes the raw ranking result
 
-    template = """Answer the question based only on the following context:\n{context}\n\nQuestion: {question}. Dont mention like prefernce and context while generating the answer"""
+    question = agent_state["question"]
+    context = "\\n".join(agent_state["top_documents"])
 
-    prompt = ChatPromptTemplate.from_template(template=template)
-    chain = prompt | llm | StrOutputParser()
-    result = chain.invoke({"question": question, "context": context})
-    state["llm_output"] = result
-    log_with_horizontal_line(f"Generated answer: {result}")
-    return state
+    prompt = ChatPromptTemplate.from_template(ANSWER_TEMPLATE)
+
+    answer = process_with_pipeline(
+        prompt,
+        {"question": question, "context": context}
+    )
+
+    agent_state["llm_output"] = answer
+    log_with_horizontal_line(f"Generated answer: {answer}")
+
+    return agent_state
 
 # Updated workflow
 workflow = StateGraph(AgentState)
