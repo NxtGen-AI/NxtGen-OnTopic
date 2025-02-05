@@ -21,9 +21,8 @@ To install the required dependencies, follow these steps:
 To use the question answering system, simply run the main script and follow the prompts.
 
 ## System Overview
-# Step-by-Step Explanation of the NLP Pipeline
 
-## Initialize Vector Store (vector_store.py)
+## 1. Initialize Vector Store (vector_store.py)
 
 ### Purpose
 Set up a Chroma vector database with document embeddings to enable semantic search.
@@ -33,7 +32,7 @@ Set up a Chroma vector database with document embeddings to enable semantic sear
 2. Populate the database with initial documents from `constants.docs`.
 3. Initialize a retriever for fetching relevant documents during query processing.
 
-## Define NLP Tasks (query_workflows.py)
+## 2. Define NLP Tasks (query_workflows.py)
 
 ### Purpose
 Implement functions to handle each NLP task in the pipeline, including query rewriting, document retrieval, topic classification, reranking, and answer generation.
@@ -97,7 +96,7 @@ Utilize logging functions to track processing steps and ensure readability of ou
 1. Use appropriate logging functions to record each stage's progress.
 2. Ensure that outputs are formatted clearly for better understanding.
 
-## Summary
+### Summary
 
 - **Initialization**: Load documents into the vector store, enabling efficient semantic search.
 - **Processing Flow**: Define a workflow that sequentially processes queries through rewriting, retrieval, classification, reranking, and answer generation.
