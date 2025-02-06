@@ -19,15 +19,15 @@ To install the required dependencies, follow these steps:
 3. **Run the Downloaded Model** Run `ollama run llama3.1:8b` to run the downloaded LLaMA model.
 4. <a href="Creating%20environments" style="font-weight: bold;">Create and activate a Python Environment</a>
 1. Open command palette \
-![Open command palette](image.png)
+![Open command palette](./images/image.png)
 2. Search and select `Python: create environment`\
-![Python: create environment](image-1.png)
+![Python: create environment](./images/image-1.png)
 3. Choose `venv` \
-![venv](image-2.png)
+![venv](./images/image-2.png)
 4. Choose interpreter path \
-![interpreter](image-3.png)
+![interpreter](./images/image-3.png)
 5. Select `requirements.txt` and click OK \
-![requirements.txt](image-4.png)
+![requirements.txt](./images/image-4.png)
 
 ## Usage
 To use the question answering system, simply run the main script and follow the prompts.
