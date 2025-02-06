@@ -17,10 +17,7 @@ To install the required dependencies, follow these steps:
 1. **Install Ollama**: First, ensure that you have [Ollama](https://ollama.com/) installed on your system.
 2. **Pull LLaMA Model**: Run `ollama pull llama3.1:8b` to download the required LLaMA model.
 3. **Run the Downloaded Model** Run `ollama run llama3.1:8b` to run the downloaded LLaMA model.
-3. **Create a Python Environment**: Create a new Python environment by running `python -m venv qa-env` (replace `qa-env` with your desired environment name).
-4. **Activate the Environment**: Activate the newly created environment:
-   * On Windows, run `qa-env\\\\Scripts\\\\activate` (replace `qa-env`)
-   * On macOS/Linux, run `source qa-env/bin/activate` (replace `qa-env`)
+3. <a href="Creating%20environments" style="font-weight: bold;">Create and activate a Python Environment</a>
 5. **Install Python Dependencies**: Install the required Python dependencies by running `pip install -r requirements.txt`
 
 ## Usage
