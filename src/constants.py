@@ -50,20 +50,20 @@ HUMAN_MESSAGE_TEMPLATE_REWRITER = "Here is the initial question: \n\n {question}
 # Example documents
 docs = [
     Document(
-        page_content="EOD REPORT THURSDAY 14 NOVEMBER\nARYAA\n\n- Tested out lab workflow using sample data provided by them and created a small model.\n\n- Created a small knowledge file using our GOA_GST data and used this to train the Granite model to test if it is working as expected -- IT IS -- also resulted in a small model fine-tuned on GOA GST data.\n\n- Now generating a large knowledge file which will contain data from an entire directory of PDFs about CA ACTS, which will be used to train our model.",
-        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-14"},
+        page_content="Project Update Wednesday 22 August\\nJohn Doe\\n\\n- Researched new marketing strategies using industry trends and created a presentation.\\n\\n- Developed a social media campaign to increase brand awareness and engagement -- it's showing promising results -- also resulted in a significant increase in followers.\\n\\n- Now planning a product launch event which will feature our new line of eco-friendly products.",
+        metadata={"source": "Sales Team Channel", "created_at": "2024-08-22"},
     ),
     Document(
-        page_content="Shilpa\n- Moved workflow to PEFT-oriented strategies\n- Post InstructLab pipeline is in place. Aryaa will cover other workflows within the NeMo framework as her pipeline on InstructLab runs.\n\nSush\n- Produced code analysis report for CSC on their code base\n- Explored Meta Self-evaluator to evaluate AMD 1B language model.",
-        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-15"},
+        page_content="Jane Smith\\n- Moved sales strategy to customer-centric approach\\n- Post-launch pipeline is in place. John Doe will cover other marketing channels within the sales framework as his campaign on social media runs.\\n\\nMichael Brown\\n- Produced market analysis report for competitor company on their product line\\n- Explored new technologies to evaluate and improve our customer service.",
+        metadata={"source": "Sales Team Channel", "created_at": "2024-08-23"},
     ),
     Document(
-        page_content="EOD Report Friday 15 November\nShilpa\nI have been doing model downloading and model conversion in .nemo format but it is still having an error while conversion. So, I will be solving that error.\n\nSushmender\nI am exploring Meta's Self-taught-evaluator (Llama-70B) model and requested Nvidia GPU for deploying the model.",
-        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-18"},
+        page_content="Daily Report Thursday 23 August\\nJane Smith\\nI have been working on product positioning and rebranding but it is still having an issue with consistency. So, I will be resolving that issue.\\n\\nMichael Brown\\nI am exploring new sales tools (CRM software) and requested a demo for our team to evaluate its effectiveness.",
+        metadata={"source": "Sales Team Channel", "created_at": "2024-08-24"},
     ),
     Document(
-        page_content="Report 27th Nov\nAryaa\nThe model trained on section 1 is ready.\n\nShilpa\nI completed my pipeline for making the dataset. Now I will move to split my dataset into train, test, and valid to train my model.\n\nSushmender\nI pulled the 'AI-Engineering' channel posts using a GET request, converted them into JSON format, and am using it as a knowledge base for my RAG setup.",
-        metadata={"source": "AI-Engineering Channel", "created_at": "2024-11-28"},
+        page_content="Weekly Report 30th August\\nJohn Doe\\nThe marketing campaign for our new product is ready.\\n\\nJane Smith\\nI completed my research on customer preferences. Now I will move to create a survey to gather more data and train our sales team.\\n\\nMichael Brown\\nI pulled the 'Sales Team' channel posts using a GET request, converted them into JSON format, and am using it as a knowledge base for our sales setup.",
+        metadata={"source": "Sales Team Channel", "created_at": "2024-08-30"},
     ),
 ]
 
