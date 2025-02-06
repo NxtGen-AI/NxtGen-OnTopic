@@ -17,8 +17,14 @@ To install the required dependencies, follow these steps:
 1. **Install Ollama**: First, ensure that you have [Ollama](https://ollama.com/) installed on your system.
 2. **Pull LLaMA Model**: Run `ollama pull llama3.1:8b` to download the required LLaMA model.
 3. **Run the Downloaded Model** Run `ollama run llama3.1:8b` to run the downloaded LLaMA model.
-3. <a href="Creating%20environments" style="font-weight: bold;">Create and activate a Python Environment</a>
-5. **Install Python Dependencies**: Install the required Python dependencies by running `pip install -r requirements.txt`
+4. <a href="Creating%20environments" style="font-weight: bold;">Create and activate a Python Environment</a>
+<ol>
+   <li>Open command palette<br>![Open command palette](image.png)</li>
+   <li>Search and select `Python: create environment`<br>![Python: create environment](image-1.png)</li>
+   <li>Choose `venv` <br>![venv](image-2.png)</li>
+   <li>Choose interpreter path <br> ![interpreter](image-3.png)</li>
+   <li>Select `requirements.txt` and click OK <br> ![requirements.txt](image-4.png)</li>
+</ol>
 
 ## Usage
 To use the question answering system, simply run the main script and follow the prompts.
