@@ -31,6 +31,6 @@ app = workflow.compile()
 
 # Example invocation
 if __name__ == "__main__":
-    state = {"question": "What michael is working on?"}
+    state = {"question": "What tasks is Michael involved in?"}
     result = app.invoke(state)
     utils.log_with_horizontal_line(f"Final answer: {result.get('llm_output', 'Process ended.')}")

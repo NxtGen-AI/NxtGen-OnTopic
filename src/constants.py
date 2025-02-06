@@ -41,8 +41,7 @@ MODEL_OLLAMA = "llama3.1:8b"
 MODEL_OPENAI = "gpt-4o-mini"
 TEMPERATURE_DEFAULT = 0
 
-SYSTEM_MESSAGE_REWRITER = """You are a question re-writer that converts an input question to a better version that is optimized 
-    for retrieval. Look at the input and try to reason about the underlying semantic intent / meaning."""
+SYSTEM_MESSAGE_REWRITER = """You are a question re-writer that converts an input question to a better version that is optimized for retrieval. Look at the input and try to reason about the underlying semantic intent / meaning."""
 
 
 HUMAN_MESSAGE_TEMPLATE_REWRITER = "Here is the initial question: \n\n {question} \n Formulate an improved question."
@@ -78,5 +77,5 @@ RERANKING_PROMPT_TEMPLATE = """Given the question and doccuments , rank the foll
         
         Question: {question}
         Documents:{documents}"""
-        
+     
 ANSWER_TEMPLATE = """Answer the question based only on the following context:\n{context}\n\nQuestion: {question}. Dont mention like prefernce and context while generating the answer"""
