@@ -1,3 +1,4 @@
 [submodule "query-answering-system"]
 	branch = main
-	url = https://github.com/NxtGen-AI-Public/query-answering-system.git
+	url = https://github.com/NxtGen-AI-Public/query-answering-system
+	path = query-answering-system
