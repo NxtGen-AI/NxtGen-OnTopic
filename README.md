@@ -13,6 +13,8 @@ NxtGen's hub for weekly knowledge sharing, AI innovation, and collaboration is d
 Our goal is to create a community that is dedicated to exploring the potential of AI and its applications. We believe that by combining human insight and expertise with the power of AI tools and techniques, we can achieve great things and drive innovation forward.
 
 # Adding a Submodule to the Repository
+For more information on adding submodules to GitHub repositories, visit: https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-add-submodules-to-GitHub-repos
+
 ## Prerequisites
 * The submodule repository must be up and running under NxtGen-AI-Public's account
 * Ownership of the submodule repository is necessary for linking submodules and parent modules
