@@ -1,0 +1,3 @@
+[submodule "query-answering-system"]
+	path = query-answering-system
+	url = https://github.com/Vinayak-NxtGen-AI/query-answering-system
