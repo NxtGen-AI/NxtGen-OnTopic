@@ -2,3 +2,6 @@
 	branch = main
 	url = https://github.com/NxtGen-AI-Public/query-answering-system
 	path = query-answering-system
+[submodule "llm-approach-from-scratch"]
+	path = llm-approach-from-scratch
+	url = https://github.com/NxtGen-AI-Public/llm-approach-from-scratch.git
