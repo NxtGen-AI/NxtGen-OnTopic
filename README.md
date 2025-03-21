@@ -71,7 +71,7 @@ To update a submodule to track a different branch, follow these steps:
 2. **Commit the changes in the `.gitmodules` file**: Run `git add .gitmodules` and then `git commit -m "Updated submodule to track main branch"`
 3. **Push changes**: Run `git push origin`
 
-# ✅ Updating a Git Submodule to Track the Latest Commit
+# Updating a Git Submodule to Track the Latest Commit
 
 Git submodules **do not automatically track branches**. Instead, they **point to a specific commit** in the submodule repository. If you want your parent repo to use the latest commit from a submodule’s branch (e.g., `main`), follow these steps.
 
