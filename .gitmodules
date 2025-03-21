@@ -9,3 +9,6 @@
 [submodule "self-rag"]
 	path = self-rag
 	url = https://github.com/NxtGen-AI-Public/self-rag
+[submodule "transformers-under-the-hood"]
+	path = transformers-under-the-hood
+	url = https://github.com/NxtGen-AI-Public/transformers-under-the-hood
