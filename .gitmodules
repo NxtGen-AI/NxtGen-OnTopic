@@ -6,3 +6,6 @@
 	branch = main
 	path = llm-approach-from-scratch
 	url = https://github.com/NxtGen-AI-Public/llm-approach-from-scratch.git
+[submodule "self-rag"]
+	path = self-rag
+	url = https://github.com/NxtGen-AI-Public/self-rag
