@@ -71,16 +71,53 @@ To update a submodule to track a different branch, follow these steps:
 2. **Commit the changes in the `.gitmodules` file**: Run `git add .gitmodules` and then `git commit -m "Updated submodule to track main branch"`
 3. **Push changes**: Run `git push origin`
 
-# Updating Submodule to Track Latest Commit 📁
-Git submodule objects are special kinds of Git objects, and **they hold the SHA information for a specific commit**, **they do not track the branch and update as and when any commit is pushed into the branch**, they have the latest changes of the latest commit at the time of adding the submodule. For more information on updating submodules to track different branches in GitHub repositories, visit: https://stackoverflow.com/a/18797720.
+# ✅ Updating a Git Submodule to Track the Latest Commit
 
-## Prerequisites 📝
-* The submodule repository must be up and running under NxtGen-AI-Public's account
-* Ownership of the submodule repository is necessary for linking submodules and parent modules
-* A submodule must already exist in the repository
+Git submodules **do not automatically track branches**. Instead, they **point to a specific commit** in the submodule repository. If you want your parent repo to use the latest commit from a submodule’s branch (e.g., `main`), follow these steps.
 
-## Instructions 📚
-To update a submodule follow these steps:
-1. **Update the submodule's configuration to track the newest commit**: Run `git submodule update --remote`
-2. **Commit the changes in the `.gitmodules` file**: Run `git add .gitmodules` and then `git commit -m "Updated submodules to track latest commits"`
-3. **Push changes**: Run `git push origin`
+📖 For a deeper explanation, see: https://stackoverflow.com/a/18797720
+
+---
+
+## ✅ Prerequisites
+
+- The submodule repository must exist and be accessible
+- The submodule must already be added to the parent repository
+- You should have push access to both the parent and submodule repositories
+
+---
+
+## 🔄 Steps to Update a Submodule to the Latest Commit
+
+### 1. Fetch the latest commit in the submodule
+
+From the root of your parent repository:
+
+    cd <submodule-folder>                  # Navigate into the submodule
+    git checkout <branch-name>            # Checkout the correct branch (e.g., main)
+    git pull origin <branch-name>         # Pull the latest commit
+    cd ..                                 # Return to the parent repository
+
+> Replace `<submodule-folder>` with the name of your submodule and `<branch-name>` with the branch you want to track (usually `main` or `master`).
+
+---
+
+### 2. Stage the updated submodule commit reference
+
+    git add <submodule-folder>
+
+This stages the updated submodule commit (the pointer in the parent repo).
+
+---
+
+### 3. Commit the change
+
+    git commit -m "Update <submodule-folder> to latest commit"
+
+---
+
+### 4. Push the changes to the remote
+
+    git push origin <branch-name>
+
+---
