@@ -5,6 +5,7 @@ NxtGen's hub for weekly knowledge sharing, AI innovation, and collaboration, fea
 1. [Introduction 📚](#introduction)
 2. [Overview 🤖](#overview)
    * [Query Answering System 💬](#query-answering-system)
+   * [Self-RAG 💬]
 3. [TODO for Contributors 📝](#todo-for-contributors)
 4. [Adding a Submodule to the Repository 📁](#adding-a-submodule-to-the-repository)
 5. [Modifying Submodule's Tracked Branch](#modifying-submodules-tracked-branch)
