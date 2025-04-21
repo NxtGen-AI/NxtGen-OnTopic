@@ -19,6 +19,9 @@ Our repository contains several submodules, each focused on a specific aspect of
 ## Query Answering System 💬
 A conversational AI system that takes documents and user queries, refines them, retrieves relevant documents, and generates answers using NLP techniques and LangChain framework. For more information, visit the [Query Answering System repository](https://github.com/NxtGen-AI-Public/query-answering-system).
 
+## Self-RAG 💬
+Self-RAG (Self-Reflective Retrieval-Augmented Generation) enhances the performance of Large Language Models (LLMs) by enabling them to self-reflect on their responses and adapt their behavior accordingly. It achieves this through a combination of on-demand retrieval of external knowledge, generation of responses, and self-critique using reflection tokens. This allows the LLM to improve its factuality, verifiability, and overall quality of generation. For more information, visit the [Query Answering System repository](https://github.com/NxtGen-AI/self-rag).
+
 # TODO for Contributors 📝
 - [ ] Request creation of a new submodule repository
 - [ ] Clone the new submodule repository and push initial files to it, ensuring that:
