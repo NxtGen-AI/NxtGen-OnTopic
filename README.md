@@ -23,6 +23,9 @@ A conversational AI system that takes documents and user queries, refines them, 
 ## Self-RAG 💬
 Self-RAG (Self-Reflective Retrieval-Augmented Generation) enhances the performance of Large Language Models (LLMs) by enabling them to self-reflect on their responses and adapt their behavior accordingly. It achieves this through a combination of on-demand retrieval of external knowledge, generation of responses, and self-critique using reflection tokens. This allows the LLM to improve its factuality, verifiability, and overall quality of generation. For more information, visit the [Query Answering System repository](https://github.com/NxtGen-AI/self-rag).
 
+## Agent-to-Agent (A2A) Protocol
+The Agent-to-Agent (A2A) Protocol is a communication framework that enables secure, decentralized messaging between autonomous agents. Commonly used in decentralized identity (DID) ecosystems like Hyperledger Aries, A2A facilitates the exchange of verifiable credentials, proofs, and DIDComm messages between agents without centralized intermediaries. This repository provides a foundational implementation or reference for A2A message structures, routing, encryption, and transport layers involved in DID-based agent communications.[A2A Protocol repository](https://github.com/NxtGen-AI/a2a-protocol.git).
+
 # TODO for Contributors 📝
 - [ ] Request creation of a new submodule repository
 - [ ] Clone the new submodule repository and push initial files to it, ensuring that:
