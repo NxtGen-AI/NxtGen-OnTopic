@@ -7,6 +7,7 @@ NxtGen's hub for weekly knowledge sharing, AI innovation, and collaboration, fea
    * [Query Answering System 💬](#query-answering-system)
    * [Self-RAG 💬](#Self-RAG)
    * [A2A Protocol 💬](#Agent-to-Agent-(A2A)-Protocol)
+   * [ASR-Finetuning 💬](#asr-finetuning)
 3. [TODO for Contributors 📝](#todo-for-contributors)
 4. [Adding a Submodule to the Repository 📁](#adding-a-submodule-to-the-repository)
 5. [Modifying Submodule's Tracked Branch](#modifying-submodules-tracked-branch)
@@ -26,6 +27,9 @@ Self-RAG (Self-Reflective Retrieval-Augmented Generation) enhances the performan
 
 ## Agent-to-Agent (A2A) Protocol 💬
 The Agent-to-Agent (A2A) Protocol is a communication framework that enables secure, decentralized messaging between autonomous agents. Commonly used in decentralized identity (DID) ecosystems like Hyperledger Aries, A2A facilitates the exchange of verifiable credentials, proofs, and DIDComm messages between agents without centralized intermediaries. This repository provides a foundational implementation or reference for A2A message structures, routing, encryption, and transport layers involved in DID-based agent communications [A2A Protocol repository](https://github.com/NxtGen-AI/a2a-protocol.git).
+
+## ASR-Finetuning 💬
+This project provides a comprehensive pipeline for fine-tuning a pre-trained NVIDIA NeMo QuartzNet model for Automatic Speech Recognition (ASR). The included scripts automate the process of data preparation, manifest generation, model training, and inference, allowing for specialization of the model on a custom English-language audio dataset. For more information, visit the [ASR Finetuning repository](https://github.com/NxtGen-AI/asr-finetuning)
 
 # TODO for Contributors 📝
 - [ ] Request creation of a new submodule repository
